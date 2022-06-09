@@ -51,64 +51,83 @@ Texto
   <script type="text/javascript">
 
 ////////////////////////// HERE!
-let sketchCode = `
+let sketchCode = tam = 10 #distancia entre as bolinhas das nuvens
+
+mx = 0
 
 def setup():
-    size(800, 600)
-    print(sin(0))
-    print(cos(0))
+    global grid_nuvens
+    size(800, 600) #define o tamanho da janela
+    frameRate(12)
+    grid_nuvens = tuple(
+        product(range(0, width, tam),
+        range(0, int(height / 2), tam))
+        )
+    
     
 def draw():
-    global ciclo_dia
-    ciclo_dia =  128 * sin(mouseX / 20.0)
-    background(0, 0, 100 + ciclo_dia)
-    nuvens()
-    meia_tela = height / 2   
-    fill(50, 10, 10)  
-    rect(0, meia_tela, width, meia_tela)
-#    humoso = map(mouseX, 0, width, meia_tela / 5, 5)
-   # rect(0, meia_tela, width, humoso )
-    nutrientes() 
-    
+    global ciclo_dia, mx
+    #print(frameRate)
+    ciclo_dia =  128 * sin(mx / 20.0) #altera a variavel "ciclo dia" com a posicao horisontal do mouse
+    background(0, 0, 100 + ciclo_dia) #altera a cor do fundo usando a variavel "ciclo dia"
+    nuvens() #executa tudo dentro de "def nuvens():"
+    meia_tela = height / 2 #define "meia tela como a metade da altura da tela"
+    fill(50, 10, 10) #define a cor do "rect" 
+    rect(0, meia_tela, width, meia_tela) #cria a terra na tela com a largura e metade da altura da tela
+    nutrientes() #executa tudo dentro de "def nutrientes():"
+    trator(mx, height/2)
+    mx = lerp(mx, mouseX, 0.3)
+     
 def nuvens():
-    escala = 0.01
-    desloca_x = mouseX
+    escala = 0.01 #limita a movimentação das bolinhas das nuvens
+    desloca_x = mx
     desloca_y = 100
-    tam = 10
-    noStroke()
-    fill(200 + ciclo_dia)
-    for x in range(0, width, tam):
-        for y in range(0, int(height / 2), tam):
-            n = noise((desloca_x + x) * escala,
-                      (desloca_y + y) * escala,
-                      mouseX * escala)
-            tam2 = map(y, 0, height / 2, 12, 0)
-            ellipse(tam / 2 + x,
-                    tam / 2 + y,
-                    tam2 * n,
-                    tam2 * n)
+    noStroke() #tira o contorno das bolinhas
+    fill(200 + ciclo_dia) #define a cor das bolinhas
+    for x, y in grid_nuvens: #
+            n = noise_bolinha((desloca_x + x) * escala,  #desloca e movimenta as nuvens
+                      (desloca_y + y) * escala,  #
+                      mx * escala)           #
+            tam2 = map(y, 0, height / 2, 12, 0) #define o tamanho das bolinhas antes da aleatoriedade
+            ellipse(tam / 2 + x, #
+                    tam / 2 + y, #cria as bolinhas
+                    tam2 * n,    #
+                    tam2 * n)    #
+
+@cache    
+def noise_bolinha(x, y, z):
+    return noise(x, y, z)
             
 def nutrientes():
-    escala = 0.01
+    escala = 0.01 #limita a movimentação das bolinhas de nutrientes
     desloca_x = 0
     desloca_y = 100
-    tam = 10
-    noStroke()
-    fill(0)  
-    for x in range(0, width, tam):
-        for y in range(int(height / 2), height, tam):
-            n = noise((desloca_x + x) * escala,
-                      (desloca_y + y) * escala,
-                      mouseX * escala
+    tam = 10 #distancia entre as bolinhas dos nutrientes
+    noStroke() #tira o contorno das bolinhas
+    fill(0) #define a cor das bolinhas
+    for x in range(0, width, tam):                     #
+        for y in range(int(height / 2), height, tam):  #
+            n = noise_bolinha((desloca_x + x) * escala,        #desloca e movimenta as bolinhas
+                      (desloca_y + y) * escala,        #
+                      mx * escala                  #
                       )
-            max_bola = map(mouseX, 0, width, 30, 10)
-            tam2 = map(y, height / 2, height, max_bola, 0)
-            ellipse(tam / 2 + x,
-                    tam / 2 + y,
-                    tam2 * n,
-                    tam2 * n)
-`
-let wrapper_content = `
+            max_bola = map(mx, 0, width, 30, 10) #tamanho maximo das bolinhas
+            tam2 = map(y, height / 2, height, max_bola, 0) #define o tamanho das bolinhas antes da aleatoriedade
+            ellipse(tam / 2 + x, #
+                    tam / 2 + y, #cria as bolinhas dos nutrientes
+                    tam2 * n,    #
+                    tam2 * n)    #
+            
+def trator(x, y, tam=60):
+    push()
+    translate(x, y)
+    if mouseX > x:
+        scale(-1, 1)
+    textSize(tam)
+    textAlign(CENTER)
+    text('🚜', 0, 0)
+    pop()
+let wrapper_content = 
 class PythonFunctions: pass
 
 setattr(PythonFunctions, 'map', map)
