@@ -53,7 +53,6 @@
 ////////////////////////// HERE!
 let sketchCode = `
 from itertools import product
-from functools import cache
 
 tam = 10 #distancia entre as bolinhas das nuvens
 
@@ -97,8 +96,7 @@ def nuvens():
                     tam / 2 + y, #cria as bolinhas
                     tam2 * n,    #
                     tam2 * n)    #
-
-@cache    
+ 
 def noise_bolinha(x, y, z):
     return noise(x, y, z)
             
