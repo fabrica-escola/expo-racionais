@@ -44,14 +44,15 @@
 
  <p>
 <pre style="color:black; font-size:8px" title="Title">
-Texto
+
 </pre>
 </p>
   </body>
   <script type="text/javascript">
 
 ////////////////////////// HERE!
-let sketchCode = tam = 10 #distancia entre as bolinhas das nuvens
+let sketchCode = `
+tam = 10 #distancia entre as bolinhas das nuvens
 
 mx = 0
 
@@ -127,7 +128,9 @@ def trator(x, y, tam=60):
     textAlign(CENTER)
     text('🚜', 0, 0)
     pop()
-let wrapper_content = 
+`
+    
+let wrapper_content = `
 class PythonFunctions: pass
 
 setattr(PythonFunctions, 'map', map)
